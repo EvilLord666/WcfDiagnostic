@@ -24,13 +24,30 @@ namespace Wcf.Diagnostics.Impl.Interfaces
             if (!Directory.Exists(_logsRootDirectory))
                 return null;
             IList<LogInfo> logInfoResult = new List<LogInfo>();
-
             return logInfoResult;
         }
 
         public string GetLogFile(string fileName)
         {
-            throw new System.NotImplementedException();
+            /*IList<FileInfo> logFiles = GetLogFiles(false).Select(f => new FileInfo(f)).ToList();
+            FileInfo selectedLogFile = logFiles.FirstOrDefault(lf => string.Equals(lf.Name, fileName));
+            if (selectedLogFile == null)
+                return string.Empty;
+            return File.ReadAllText(selectedLogFile.FullName);*/
+            return null;
+        }
+
+        private IList<FileInfo> BuildLogFileList()
+        {
+            List<string> directories = new List<string>() {_logsRootDirectory};
+            if (_includeSubDirs)
+                directories.AddRange(Directory.GetDirectories(_logsRootDirectory));
+            IList<FileInfo> logFilesInfo = new List<FileInfo>();
+            foreach (string directory in directories)
+            {
+                //Directory.GetFiles()
+            }
+            return new List<FileInfo>();
         }
 
         private string _logsRootDirectory;
