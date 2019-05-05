@@ -4,7 +4,7 @@ using System.IO;
 using Wcf.Diagnostics.Core.Data;
 using Wcf.Diagnostics.Core.Interfaces;
 
-namespace Wcf.Diagnostics.NetCore.Impl.Interfaces
+namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
 {
     public class SimpleLogsCaptureCallback : ILogsCaptureCallback
     {
