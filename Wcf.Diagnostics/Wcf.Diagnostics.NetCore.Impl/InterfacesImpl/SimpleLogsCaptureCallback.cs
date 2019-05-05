@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Wcf.Diagnostics.Core.Data;
 using Wcf.Diagnostics.Core.Interfaces;
 
@@ -23,18 +25,34 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
         {
             if (!Directory.Exists(_logsRootDirectory))
                 return null;
-            IList<LogInfo> logInfoResult = new List<LogInfo>();
+            IList<FileInfo> logsFiles = BuildLogFileList();
+            IList<LogInfo> logInfoResult = logsFiles.Select(lf => new LogInfo(lf.Name, lf.FullName)).ToList();
             return logInfoResult;
         }
 
         public string GetLogFile(string fileName)
         {
-            /*IList<FileInfo> logFiles = GetLogFiles(false).Select(f => new FileInfo(f)).ToList();
-            FileInfo selectedLogFile = logFiles.FirstOrDefault(lf => string.Equals(lf.Name, fileName));
-            if (selectedLogFile == null)
-                return string.Empty;
-            return File.ReadAllText(selectedLogFile.FullName);*/
-            return null;
+            FileInfo logFile = GetLogFileByName(fileName);
+            if (logFile == null)
+                return null;
+            string logFileText = File.ReadAllText(logFile.FullName);
+            return logFileText;
+        }
+
+        public async Task<string> GetLogFileAsync(string fileName)
+        {
+            FileInfo logFile = GetLogFileByName(fileName);
+            if (logFile == null)
+                return null;
+            string logFileText = await File.ReadAllTextAsync(logFile.FullName);
+            return logFileText;
+        }
+
+        private FileInfo GetLogFileByName(string fileName)
+        {
+            IList<FileInfo> logsFiles = BuildLogFileList();
+            FileInfo logFile = logsFiles.FirstOrDefault(lf => string.Equals(lf.Name, fileName));
+            return logFile;
         }
 
         private IList<FileInfo> BuildLogFileList()
@@ -42,16 +60,22 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
             List<string> directories = new List<string>() {_logsRootDirectory};
             if (_includeSubDirs)
                 directories.AddRange(Directory.GetDirectories(_logsRootDirectory));
-            IList<FileInfo> logFilesInfo = new List<FileInfo>();
+            List<FileInfo> logFilesInfo = new List<FileInfo>();
             foreach (string directory in directories)
             {
-                //Directory.GetFiles()
+                foreach (string filter in _logFileFilters)
+                {
+                    string[] filteredFiles = Directory.GetFiles(directory, filter);
+                    logFilesInfo.AddRange(filteredFiles.Where(f => logFilesInfo.Any(lf => !string.Equals(lf.FullName, f)))
+                                                       .Select(f => new FileInfo(f)).ToList());
+                }
+                
             }
-            return new List<FileInfo>();
+            return logFilesInfo;
         }
 
-        private string _logsRootDirectory;
-        private bool _includeSubDirs;
-        private IList<string> _logFileFilters;
+        private readonly string _logsRootDirectory;
+        private readonly bool _includeSubDirs;
+        private readonly IList<string> _logFileFilters;
     }
 }
