@@ -44,7 +44,13 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
             FileInfo logFile = GetLogFileByName(fileName);
             if (logFile == null)
                 return null;
-            string logFileText = await File.ReadAllTextAsync(logFile.FullName);
+            string logFileText = "";
+            #if NETCORE
+                logFileText = await File.ReadAllTextAsync(logFile.FullName);
+            #endif
+            #if NETSTANDARD
+                logFileText = File.ReadAllText(logFile.FullName);
+            #endif
             return logFileText;
         }
 
