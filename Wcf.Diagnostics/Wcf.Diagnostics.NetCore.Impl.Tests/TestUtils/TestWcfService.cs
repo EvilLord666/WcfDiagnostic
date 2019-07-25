@@ -11,7 +11,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
         public int LogIn(string domain, string login, string password)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
-            return rand.Next(1000, Int32.MaxValue);
+            return rand.Next(0, 1000);
         }
 
         public bool LogOut(int sessionId)

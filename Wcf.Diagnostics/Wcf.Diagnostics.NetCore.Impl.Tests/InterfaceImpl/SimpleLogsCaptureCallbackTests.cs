@@ -21,27 +21,26 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             binding.HostNameComparisonMode = HostNameComparisonMode.StrongWildcard;
             binding.Security.Mode = BasicHttpSecurityMode.None;
             //binding.
-            
+
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(BaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
-            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testwcfservice");
+            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testService");
             serviceHost.AddServiceEndpoint(typeof(ITestWcfService), new WSHttpBinding(), "mex");
 
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             smb.HttpGetEnabled = true;
-            smb.HttpGetUrl = new Uri("http://0.0.0.0:8123/mex");
+            smb.HttpGetUrl = new Uri(TestServiceMetadataEndpointUri);
             serviceHost.Description.Behaviors.Add(smb);
-
-            serviceHost.Open(TimeSpan.FromSeconds(10));
+         
             serviceHost.Opened += (sender, args) =>
             {
                 System.Console.WriteLine("Service Host Was Opened!");
             };
-            //Thread.Sleep(TimeSpan.FromSeconds(10));
-            //  Create channel for client
+            
+            serviceHost.Open(TimeSpan.FromSeconds(10));
+            
             Binding serviceBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
-            EndpointAddress endpointAddress = new EndpointAddress(EndpointUri);
-                //EndpointUri);
+            EndpointAddress endpointAddress = new EndpointAddress(TestServiceEndpointUri);
             ChannelFactory<ITestWcfService> channelFactory = new ChannelFactory<ITestWcfService>(serviceBinding, endpointAddress);
             ITestWcfService server4Client = channelFactory.CreateChannel();
 
@@ -53,7 +52,8 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             serviceHost.Close();
         }
 
-        private const string BaseUri = "http://0.0.0.0:8123/";
-        private const string EndpointUri = "http://0.0.0.0:8123/testwcfservice/";
+        private const string BaseUri = "http://127.0.0.1:8000/";
+        private const string TestServiceEndpointUri = "http://127.0.0.1:8000/testService/";
+        private const string TestServiceMetadataEndpointUri = "http://127.0.0.1:8000/mex/";
     }
 }
