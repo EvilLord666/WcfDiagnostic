@@ -41,14 +41,19 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             
             Binding serviceBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(TestServiceEndpointUri);
+            // client channel creation
             ChannelFactory<ITestWcfService> channelFactory = new ChannelFactory<ITestWcfService>(serviceBinding, endpointAddress);
-            ITestWcfService server4Client = channelFactory.CreateChannel();
+            ITestWcfService client = channelFactory.CreateChannel();
 
-            int sessionId = server4Client.LogIn("MyDomain", "admin", "123");
+            int sessionId = client.LogIn("MyDomain", "admin", "123");
 
-            // todo: umv: add here call to get logs and check
+            Assert.True(sessionId < 1000);
+            
+            // todo: umv: implement logs capture from client here ...
 
-            server4Client.LogOut(sessionId);
+            bool result = client.LogOut(sessionId);
+            
+            Assert.True(result);
             serviceHost.Close();
         }
 
