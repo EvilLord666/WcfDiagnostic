@@ -11,13 +11,13 @@ namespace Wcf.Diagnostics.Core.Interfaces
     [ServiceContract]
     public interface ILogsCaptureCallback
     {
-        [OperationContract]
+        [OperationContract(Name = "GetLogsFiles")]
         IList<LogInfo> GetLogsFiles();
 
-        [OperationContract]
+        [OperationContract(Name = "GetLogFile")]
         string GetLogFile(string fileName);
 
-        [OperationContract]
+        [OperationContract(Name = "GetLogFileAsync")]
         Task<string> GetLogFileAsync(string fileName);
     }
 }

@@ -10,7 +10,6 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
 {
     public class SimpleLogsCaptureCallback : ILogsCaptureCallback
     {
-        // todo: add pattern search template ...
         public SimpleLogsCaptureCallback(string logsRootDirectory, bool includeSubDirs, IList<string> logFileFilters)
         {
             if(string.IsNullOrEmpty(logsRootDirectory))

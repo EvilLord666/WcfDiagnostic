@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Wcf.Diagnostics.Core\Wcf.Diagnostics.Core.csproj" />
+    <ProjectReference Include="..\Wcf.Diagnostics.NetCore.Impl\Wcf.Diagnostics.NetCore.Impl.csproj" />
   </ItemGroup>
 
 </Project>

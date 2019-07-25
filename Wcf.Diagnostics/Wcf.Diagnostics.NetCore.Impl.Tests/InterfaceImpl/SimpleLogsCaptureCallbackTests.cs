@@ -5,6 +5,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
+using Wcf.Diagnostics.NetCore.Impl.InterfacesImpl;
 using Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils;
 using Xunit;
 
@@ -16,12 +17,13 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
         public void TestLogsCapture()
         {
             // Create server
-            BasicHttpBinding binding = new BasicHttpBinding();
+            WSDualHttpBinding binding = new WSDualHttpBinding();
             binding.Name = "TestService";
             binding.HostNameComparisonMode = HostNameComparisonMode.StrongWildcard;
-            binding.Security.Mode = BasicHttpSecurityMode.None;
+            binding.Security.Mode = WSDualHttpSecurityMode.None;
+            binding.ClientBaseAddress = new Uri(ClientBaseUri);
 
-            ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(BaseUri));
+            ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(ServerBaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
             serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testService");
             /*
@@ -43,10 +45,11 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             
             serviceHost.Open(TimeSpan.FromSeconds(10));
             
-            Binding serviceBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            Binding serviceBinding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(TestServiceEndpointUri);
             // client channel creation
-            ChannelFactory<ITestWcfService> channelFactory = new ChannelFactory<ITestWcfService>(serviceBinding, endpointAddress);
+            DuplexChannelFactory<ITestWcfService> channelFactory = new DuplexChannelFactory<ITestWcfService>(new SimpleLogsCaptureCallback("..", true, new[] {"*.log"}),
+                                                                                                             serviceBinding, endpointAddress);
             ITestWcfService client = channelFactory.CreateChannel();
 
             int sessionId = client.LogIn("MyDomain", "admin", "123");
@@ -61,7 +64,8 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             serviceHost.Close();
         }
 
-        private const string BaseUri = "http://127.0.0.1:8000/";
+        private const string ServerBaseUri = "http://127.0.0.1:8000/";
+        private const string ClientBaseUri = "http://127.0.0.1:8008/";
         private const string TestServiceEndpointUri = "http://127.0.0.1:8000/testService/";
         // private const string TestServiceMetadataEndpointUri = "http://127.0.0.1:8000/mex/";
     }
