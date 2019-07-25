@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Text;
+using Wcf.Diagnostics.Core.Interfaces;
 
 namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
 {
-    [ServiceContract]
+    [ServiceContract(CallbackContract = typeof(ILogsCaptureCallback))]
     public interface ITestWcfService
     {
         [OperationContract]

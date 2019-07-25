@@ -20,7 +20,6 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             binding.Name = "TestService";
             binding.HostNameComparisonMode = HostNameComparisonMode.StrongWildcard;
             binding.Security.Mode = BasicHttpSecurityMode.None;
-            //binding.
 
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(BaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
@@ -34,7 +33,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             smb.HttpGetEnabled = true;
             smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
-            // smb.HttpGetUrl = new Uri(TestServiceMetadataEndpointUri);
+            smb.HttpGetUrl = new Uri(TestServiceMetadataEndpointUri);
             serviceHost.Description.Behaviors.Add(smb);
             */
             serviceHost.Opened += (sender, args) =>

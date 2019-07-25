@@ -16,4 +16,8 @@
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Wcf.Diagnostics.Core\Wcf.Diagnostics.Core.csproj" />
+  </ItemGroup>
+
 </Project>
