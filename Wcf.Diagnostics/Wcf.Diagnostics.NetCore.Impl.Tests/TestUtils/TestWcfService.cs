@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ServiceModel;
 using System.Text;
 
 namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
     public class TestWcfService : ITestWcfService
     {
         public int LogIn(string domain, string login, string password)

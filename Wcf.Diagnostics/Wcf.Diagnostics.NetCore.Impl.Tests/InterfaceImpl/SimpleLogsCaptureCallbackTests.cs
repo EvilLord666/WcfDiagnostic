@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.Text;
+using System.Threading;
 using Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils;
 using Xunit;
 
@@ -18,12 +20,28 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             binding.Name = "TestService";
             binding.HostNameComparisonMode = HostNameComparisonMode.StrongWildcard;
             binding.Security.Mode = BasicHttpSecurityMode.None;
+            //binding.
+            
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(BaseUri));
-            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, new Uri(EndpointUri));
-            serviceHost.Open();
+            serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
+            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testwcfservice");
+            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), new WSHttpBinding(), "mex");
+
+            ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+            smb.HttpGetEnabled = true;
+            smb.HttpGetUrl = new Uri("http://0.0.0.0:8123/mex");
+            serviceHost.Description.Behaviors.Add(smb);
+
+            serviceHost.Open(TimeSpan.FromSeconds(10));
+            serviceHost.Opened += (sender, args) =>
+            {
+                System.Console.WriteLine("Service Host Was Opened!");
+            };
+            //Thread.Sleep(TimeSpan.FromSeconds(10));
             //  Create channel for client
             Binding serviceBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(EndpointUri);
+                //EndpointUri);
             ChannelFactory<ITestWcfService> channelFactory = new ChannelFactory<ITestWcfService>(serviceBinding, endpointAddress);
             ITestWcfService server4Client = channelFactory.CreateChannel();
 
@@ -35,7 +53,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             serviceHost.Close();
         }
 
-        private const string BaseUri = "http://0.0.0.0:8123/testwcfservice";
-        private const string EndpointUri = "http://0.0.0.0:8123/testwcfservice/test";
+        private const string BaseUri = "http://0.0.0.0:8123/";
+        private const string EndpointUri = "http://0.0.0.0:8123/testwcfservice/";
     }
 }
