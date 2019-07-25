@@ -25,13 +25,18 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(BaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
             serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testService");
-            serviceHost.AddServiceEndpoint(typeof(ITestWcfService), new WSHttpBinding(), "mex");
-
+            /*
+            serviceHost.AddServiceEndpoint(//typeof(ITestWcfService),
+                                           ServiceMetadataBehavior.MexContractName, 
+                                           MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
+                //typeof(ITestWcfService), new WSHttpBinding(), "mex");
+            
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             smb.HttpGetEnabled = true;
-            smb.HttpGetUrl = new Uri(TestServiceMetadataEndpointUri);
+            smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+            // smb.HttpGetUrl = new Uri(TestServiceMetadataEndpointUri);
             serviceHost.Description.Behaviors.Add(smb);
-         
+            */
             serviceHost.Opened += (sender, args) =>
             {
                 System.Console.WriteLine("Service Host Was Opened!");
@@ -59,6 +64,6 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
 
         private const string BaseUri = "http://127.0.0.1:8000/";
         private const string TestServiceEndpointUri = "http://127.0.0.1:8000/testService/";
-        private const string TestServiceMetadataEndpointUri = "http://127.0.0.1:8000/mex/";
+        // private const string TestServiceMetadataEndpointUri = "http://127.0.0.1:8000/mex/";
     }
 }

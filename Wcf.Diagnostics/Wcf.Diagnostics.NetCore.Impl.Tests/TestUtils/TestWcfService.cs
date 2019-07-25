@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.Text;
 
 namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
