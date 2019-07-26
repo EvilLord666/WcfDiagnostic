@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Text;
+using Wcf.Diagnostics.Core.Data;
 using Wcf.Diagnostics.Core.Interfaces;
 
 namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
@@ -14,5 +15,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
 
         [OperationContract]
         bool LogOut(int sessionId);
+
+        IList<LogInfo> GetClientLogs();
     }
 }

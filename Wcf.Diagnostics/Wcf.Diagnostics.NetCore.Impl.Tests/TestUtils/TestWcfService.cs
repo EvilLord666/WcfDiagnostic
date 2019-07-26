@@ -4,6 +4,8 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
+using Wcf.Diagnostics.Core.Data;
+using Wcf.Diagnostics.Core.Interfaces;
 
 namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
 {
@@ -19,6 +21,18 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
         public bool LogOut(int sessionId)
         {
             return true;
+        }
+
+        public IList<LogInfo> GetClientLogs()
+        {
+            ILogsCaptureCallback clientChannel = GetClientCallbackChannel();
+            IList<LogInfo> result = clientChannel.GetLogsFiles();
+            return result;
+        }
+
+        private ILogsCaptureCallback GetClientCallbackChannel()
+        {
+            return OperationContext.Current.GetCallbackChannel<ILogsCaptureCallback>();
         }
     }
 }

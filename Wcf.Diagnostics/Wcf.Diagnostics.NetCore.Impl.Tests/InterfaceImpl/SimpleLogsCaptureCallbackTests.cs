@@ -5,6 +5,7 @@ using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
+using Wcf.Diagnostics.Core.Data;
 using Wcf.Diagnostics.NetCore.Impl.InterfacesImpl;
 using Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils;
 using Xunit;
@@ -26,6 +27,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(ServerBaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
             serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testService");
+            // ITestWcfService server = new TestWcfService();
             /*
             serviceHost.AddServiceEndpoint(//typeof(ITestWcfService),
                                            ServiceMetadataBehavior.MexContractName, 
@@ -57,6 +59,8 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             Assert.True(sessionId < 1000);
             
             // todo: umv: implement logs capture from client here ...
+            // IList<LogInfo> clientLogs = server.GetClientLogs();
+            
 
             bool result = client.LogOut(sessionId);
             
