@@ -48,7 +48,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             Binding serviceBinding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(TestServiceEndpointUri);
             // client channel creation
-            DuplexChannelFactory<ITestWcfService> channelFactory = new DuplexChannelFactory<ITestWcfService>(new SimpleLogsCaptureCallback("..", true, new[] {"*.log"}),
+            DuplexChannelFactory<ITestWcfService> channelFactory = new DuplexChannelFactory<ITestWcfService>(new SimpleLogsCaptureCallback(@"..\..\..\TestLogs", true, new[] {"*.log"}),
                                                                                                              serviceBinding, endpointAddress);
             ITestWcfService client = channelFactory.CreateChannel();
 
