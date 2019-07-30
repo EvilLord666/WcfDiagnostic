@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -15,24 +16,35 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
         public int LogIn(string domain, string login, string password)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
+            ProcessClient();
             return rand.Next(0, 1000);
         }
 
         public bool LogOut(int sessionId)
         {
+            ProcessClient();
             return true;
         }
 
-        public IList<LogInfo> GetClientLogs()
+        public IList<LogInfo> GetClientLogs(string clientId)
         {
-            ILogsCaptureCallback clientChannel = GetClientCallbackChannel();
+            ILogsCaptureCallback clientChannel = Clients[clientId];
             IList<LogInfo> result = clientChannel.GetLogsFiles();
             return result;
         }
 
-        private ILogsCaptureCallback GetClientCallbackChannel()
+        private static void ProcessClient()
         {
-            return OperationContext.Current.GetCallbackChannel<ILogsCaptureCallback>();
+            OperationContext context = OperationContext.Current;
+            string key = context.SessionId ?? context.Channel.RemoteAddress.Uri.Host;
+            Clients[key] = GetClientCallbackChannel(context);
         }
+
+        private static ILogsCaptureCallback GetClientCallbackChannel(OperationContext context)
+        {
+            return context.GetCallbackChannel<ILogsCaptureCallback>();
+        }
+        
+        public static readonly IDictionary<string, ILogsCaptureCallback> Clients = new ConcurrentDictionary<string, ILogsCaptureCallback>();
     }
 }

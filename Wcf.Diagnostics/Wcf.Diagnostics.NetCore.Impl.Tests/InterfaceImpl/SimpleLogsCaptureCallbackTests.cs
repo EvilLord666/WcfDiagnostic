@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading;
 using Wcf.Diagnostics.Core.Data;
+using Wcf.Diagnostics.Core.Interfaces;
 using Wcf.Diagnostics.NetCore.Impl.InterfacesImpl;
 using Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils;
 using Xunit;
@@ -27,6 +29,10 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             ServiceHost serviceHost = new ServiceHost(typeof(TestWcfService), new Uri(ServerBaseUri));
             serviceHost.OpenTimeout = TimeSpan.FromSeconds(10);
             serviceHost.AddServiceEndpoint(typeof(ITestWcfService), binding, "testService");
+            ServiceDebugBehavior debugBehavior = serviceHost.Description.Behaviors.FirstOrDefault(item => item.GetType() == typeof(ServiceDebugBehavior)) as ServiceDebugBehavior;
+            if (debugBehavior != null)
+                debugBehavior.IncludeExceptionDetailInFaults = true;
+            //serviceHost.Description.Behaviors.Add(new ServiceDebugBehavior() { IncludeExceptionDetailInFaults = true });
             // ITestWcfService server = new TestWcfService();
             /*
             serviceHost.AddServiceEndpoint(//typeof(ITestWcfService),
@@ -47,20 +53,24 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             
             serviceHost.Open(TimeSpan.FromSeconds(10));
             
-            Binding serviceBinding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
+            WSDualHttpBinding serviceBinding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
+            
             EndpointAddress endpointAddress = new EndpointAddress(TestServiceEndpointUri);
             // client channel creation
             DuplexChannelFactory<ITestWcfService> channelFactory = new DuplexChannelFactory<ITestWcfService>(new SimpleLogsCaptureCallback(@"..\..\..\TestLogs", true, new[] {"*.log"}),
                                                                                                              serviceBinding, endpointAddress);
+            
             ITestWcfService client = channelFactory.CreateChannel();
+            
+            ITestWcfService server = new TestWcfService();
 
             int sessionId = client.LogIn("MyDomain", "admin", "123");
 
             Assert.True(sessionId < 1000);
-            
-            // todo: umv: implement logs capture from client here ...
-            // IList<LogInfo> clientLogs = server.GetClientLogs();
-            
+
+            IDictionary<string, ILogsCaptureCallback> clients = TestWcfService.Clients;
+            Assert.Equal(1, clients.Count);
+            IList<LogInfo> clientLogsFiles = server.GetClientLogs(clients.First().Key);
 
             bool result = client.LogOut(sessionId);
             
