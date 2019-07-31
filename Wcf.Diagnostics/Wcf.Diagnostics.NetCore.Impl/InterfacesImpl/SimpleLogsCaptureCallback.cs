@@ -10,6 +10,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
 {
     public class SimpleLogsCaptureCallback : ILogsCaptureCallback
     {
+        
         public SimpleLogsCaptureCallback(string logsRootDirectory, bool includeSubDirs, IList<string> logFileFilters)
         {
             if(string.IsNullOrEmpty(logsRootDirectory))
@@ -67,18 +68,23 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
             if (_includeSubDirs)
                 directories.AddRange(Directory.GetDirectories(_logsRootDirectory));
             List<FileInfo> logFilesInfo = new List<FileInfo>();
+            
             foreach (string directory in directories)
             {
                 // todo: umv: simplify to O(n)
+                
+                List<FileInfo> filteredLogFiles = new List<FileInfo>();
                 foreach (string filter in _logFileFilters)
                 {
                     string[] filteredFiles = Directory.GetFiles(directory, filter);
-                    IList<FileInfo> filesToAdd = filteredFiles.Where(f => logFilesInfo.All(lf => !string.Equals(Path.GetFullPath(lf.FullName), 
-                                                                                                                Path.GetFullPath(f))))
-                                                              .Select(f => new FileInfo(f)).ToList();
-                    logFilesInfo.AddRange(filesToAdd);
+                    IList<FileInfo> filesToAdd = filteredFiles.Select(f => new FileInfo(f)).ToList();
+                    filteredLogFiles.AddRange(filesToAdd);
                 }
-                
+
+                IList<FileInfo> selection = filteredLogFiles.GroupBy(lf => lf.FullName).Where(g => g.ToList().Count == _logFileFilters.Count)
+                                                                                       .Select(g => g.ToList()[0]).ToList();
+                logFilesInfo.AddRange(selection);
+
             }
             return logFilesInfo;
         }

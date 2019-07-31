@@ -16,6 +16,13 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
 {
     public class SimpleLogsCaptureCallbackTests
     {
+        /// <summary>
+        ///    Integration test which implies:
+        ///       1) Instantiation of real WCF service (ITestWcfService) with Callback contract to ILogsCaptureCallback
+        ///          and running it on http://127.0.0.1:8000/
+        ///       2) Client construction and connect it to started server
+        ///       3) Attempt to access to client logs via callback interface
+        /// </summary>
         [Fact]
         public void TestLogsCapture()
         {
@@ -77,6 +84,18 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             bool result = client.LogOut(sessionId);
             Assert.True(result);
             serviceHost.Close();
+        }
+
+        /// <summary>
+        ///     Test for check rules apply to select log files
+        /// </summary>
+        [Fact]
+        public void TestLogsFileSelection()
+        {
+            SimpleLogsCaptureCallback clientCallbackInterface = new SimpleLogsCaptureCallback(@"..\..\..\TestLogs", true, 
+                                                                                              new[] {"*.log", "previous*"});
+            IList<LogInfo> logFiles = clientCallbackInterface.GetLogsFiles();
+            Assert.Equal(2, logFiles.Count);
         }
 
         private const string ServerBaseUri = "http://127.0.0.1:8000/";
