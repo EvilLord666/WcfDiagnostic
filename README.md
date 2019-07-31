@@ -52,3 +52,6 @@ Full example is demonstrated in Unit Test - SimpleLogsCaptureCallbackTests in wh
             bool result = client.LogOut(sessionId);
             Assert.True(result);
             serviceHost.Close();
+
+# Nuget Package
+https://www.nuget.org/packages/WcfDiagnostic/
