@@ -71,7 +71,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             IDictionary<string, ILogsCaptureCallback> clients = TestWcfService.Clients;
             Assert.Equal(1, clients.Count);
             IList<LogInfo> clientLogsFiles = server.GetClientLogs(clients.First().Key);
-
+            Assert.Equal(3, clientLogsFiles.Count);
             bool result = client.LogOut(sessionId);
             
             Assert.True(result);

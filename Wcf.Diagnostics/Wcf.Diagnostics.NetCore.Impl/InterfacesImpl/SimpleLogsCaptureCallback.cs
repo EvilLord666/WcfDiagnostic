@@ -69,11 +69,14 @@ namespace Wcf.Diagnostics.NetCore.Impl.InterfacesImpl
             List<FileInfo> logFilesInfo = new List<FileInfo>();
             foreach (string directory in directories)
             {
+                // todo: umv: simplify to O(n)
                 foreach (string filter in _logFileFilters)
                 {
                     string[] filteredFiles = Directory.GetFiles(directory, filter);
-                    logFilesInfo.AddRange(filteredFiles.Where(f => logFilesInfo.Any(lf => !string.Equals(lf.FullName, f)))
-                                                       .Select(f => new FileInfo(f)).ToList());
+                    IList<FileInfo> filesToAdd = filteredFiles.Where(f => logFilesInfo.All(lf => !string.Equals(Path.GetFullPath(lf.FullName), 
+                                                                                                                Path.GetFullPath(f))))
+                                                              .Select(f => new FileInfo(f)).ToList();
+                    logFilesInfo.AddRange(filesToAdd);
                 }
                 
             }
