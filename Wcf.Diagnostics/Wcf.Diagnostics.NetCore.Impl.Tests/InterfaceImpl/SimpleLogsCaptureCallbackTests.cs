@@ -72,6 +72,8 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             Assert.Equal(1, clients.Count);
             IList<LogInfo> clientLogsFiles = server.GetClientLogs(clients.First().Key);
             Assert.Equal(3, clientLogsFiles.Count);
+            string logFileContent = server.GetLogFile(clients.First().Key, "actual.log");
+            Assert.Equal("Current log file (actual).", logFileContent);
             bool result = client.LogOut(sessionId);
             Assert.True(result);
             serviceHost.Close();

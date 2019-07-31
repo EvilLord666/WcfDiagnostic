@@ -35,7 +35,9 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
 
         public string GetLogFile(string clientId, string logFileName)
         {
-            return null;
+            ILogsCaptureCallback clientChannel = Clients[clientId];
+            string result = clientChannel.GetLogFile(logFileName);
+            return result;
         }
 
         private void ProcessClient()
