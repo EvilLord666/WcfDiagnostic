@@ -73,7 +73,6 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.InterfaceImpl
             IList<LogInfo> clientLogsFiles = server.GetClientLogs(clients.First().Key);
             Assert.Equal(3, clientLogsFiles.Count);
             bool result = client.LogOut(sessionId);
-            
             Assert.True(result);
             serviceHost.Close();
         }

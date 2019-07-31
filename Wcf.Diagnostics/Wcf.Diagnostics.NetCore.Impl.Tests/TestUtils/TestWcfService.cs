@@ -33,14 +33,19 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
             return result;
         }
 
-        private static void ProcessClient()
+        public string GetLogFile(string clientId, string logFileName)
+        {
+            return null;
+        }
+
+        private void ProcessClient()
         {
             OperationContext context = OperationContext.Current;
             string key = context.SessionId ?? context.Channel.RemoteAddress.Uri.Host;
             Clients[key] = GetClientCallbackChannel(context);
         }
 
-        private static ILogsCaptureCallback GetClientCallbackChannel(OperationContext context)
+        private ILogsCaptureCallback GetClientCallbackChannel(OperationContext context)
         {
             return context.GetCallbackChannel<ILogsCaptureCallback>();
         }

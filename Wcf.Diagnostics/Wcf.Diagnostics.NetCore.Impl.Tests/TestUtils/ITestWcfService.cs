@@ -17,5 +17,7 @@ namespace Wcf.Diagnostics.NetCore.Impl.Tests.TestUtils
         bool LogOut(int sessionId);
 
         IList<LogInfo> GetClientLogs(string clientId);
+
+        string GetLogFile(string clientId, string logFileName);
     }
 }
