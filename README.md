@@ -1,5 +1,5 @@
 # Wcf Diagnostics
-An simple wcf service callback interface and it's implementation for accessing logs via WCF on client side (very useful when you have to understand what is happended on client side but you have security restriction to access client PC's via RDP, TeamViewer or other Tools.
+An simple wcf service callback interface and it's implementation for accessing WCF client logs **FROM SERVER** (very useful when you have to understand what is happended on client side but you have security restriction to access client PC's via RDP, TeamViewer or other Tools.
 Interface is a very simple only 2 methods - GetLogsFiles (list of logs files) and GetLogFile by FileName. Independent from log sybsystem (could be used any: Serilog, Nlog, log4net, e.t.c.)
 
 # How to use
