@@ -6,7 +6,7 @@ using Wcf.Diagnostics.Core.Interfaces;
 namespace WcfDiagnosticUsageExample.Common.Common
 {
     [ServiceContract(CallbackContract = typeof(IAppCallback))]
-    public interface IAppServer
+    public interface IAppServer<T> where T : IComparable
     {
         [OperationContract]
         bool Login(string userName, string password);
@@ -14,9 +14,9 @@ namespace WcfDiagnosticUsageExample.Common.Common
         [OperationContract]
         bool Logout();
         
-        IList<string> GetLogFiles<T>(T clientId) where T : IComparable;
-        string GetLogFile<T>(T clientId) where T : IComparable;
-        string GetVersion<T>(T clientId) where T : IComparable;
-        IList<string> GetEnvironmentVariables<T>(T clientId) where T : IComparable;
+        IList<string> GetLogFiles(T clientId);
+        string GetLogFile(T clientId);
+        string GetVersion(T clientId);
+        IList<string> GetEnvironmentVariables(T clientId);
     }
 }

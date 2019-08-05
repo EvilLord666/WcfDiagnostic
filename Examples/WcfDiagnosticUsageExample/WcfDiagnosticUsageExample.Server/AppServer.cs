@@ -4,7 +4,8 @@ using WcfDiagnosticUsageExample.Common.Common;
 
 namespace WcfDiagnosticUsageExample.Server
 {
-    public class AppServer : IAppServer
+    public class AppServer<T> : IAppServer<T>
+        where T: IComparable
     {
         public bool Login(string userName, string password)
         {
@@ -16,24 +17,27 @@ namespace WcfDiagnosticUsageExample.Server
             throw new NotImplementedException();
         }
 
-        public IList<string> GetLogFiles<T>(T clientId) where T : IComparable
+        public IList<string> GetLogFiles(T clientId)
         {
             throw new NotImplementedException();
         }
 
-        public string GetLogFile<T>(T clientId) where T : IComparable
+        public string GetLogFile(T clientId)
         {
             throw new NotImplementedException();
         }
 
-        public string GetVersion<T>(T clientId) where T : IComparable
+        public string GetVersion(T clientId)
         {
             throw new NotImplementedException();
         }
 
-        public IList<string> GetEnvironmentVariables<T>(T clientId) where T : IComparable
+        public IList<string> GetEnvironmentVariables(T clientId) 
         {
             throw new NotImplementedException();
         }
+        
+        //public event 
+        
     }
 }
