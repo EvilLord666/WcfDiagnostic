@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfDiagnosticUsageExample.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfDiagnosticUsageExample.Client", "WcfDiagnosticUsageExample.Client\WcfDiagnosticUsageExample.Client.csproj", "{3FA357FE-4556-4149-9309-D7CE23F35D9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfDiagnosticUsageExample.Server", "WcfDiagnosticUsageExample.Server\WcfDiagnosticUsageExample.Server.csproj", "{034FD8D9-6BBA-47CA-B2C9-C862B705F377}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{3FA357FE-4556-4149-9309-D7CE23F35D9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA357FE-4556-4149-9309-D7CE23F35D9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FA357FE-4556-4149-9309-D7CE23F35D9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{034FD8D9-6BBA-47CA-B2C9-C862B705F377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{034FD8D9-6BBA-47CA-B2C9-C862B705F377}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{034FD8D9-6BBA-47CA-B2C9-C862B705F377}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{034FD8D9-6BBA-47CA-B2C9-C862B705F377}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

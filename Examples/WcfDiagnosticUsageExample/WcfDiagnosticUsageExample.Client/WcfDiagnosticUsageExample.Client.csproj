@@ -8,4 +8,10 @@
       <ProjectReference Include="..\WcfDiagnosticUsageExample.Common\WcfDiagnosticUsageExample.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="System.ServiceModel.Duplex" Version="4.5.3" />
+      <PackageReference Include="System.ServiceModel.Http" Version="4.5.3" />
+      <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>
