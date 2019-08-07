@@ -43,6 +43,10 @@ namespace WcfDiagnosticUsageExample.Server
             return false;
         }
 
+        /*public void Empty()
+        {
+        }*/
+
         public IList<LogInfo> GetLogFiles(string clientId)
         {
             IAppCallback client = Clients[clientId];
