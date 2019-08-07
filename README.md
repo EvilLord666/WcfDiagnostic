@@ -3,7 +3,7 @@ An simple wcf service callback interface and it's implementation for accessing W
 Interface is a very simple only 2 methods - GetLogsFiles (list of logs files) and GetLogFile by FileName. Independent from log sybsystem (could be used any: Serilog, Nlog, log4net, e.t.c.)
 
 # How to use
-Full example is demonstrated in Unit Test - SimpleLogsCaptureCallbackTests in which i manually start test WCF service with callback contract - ILogsCaptureCallback, starting client and getting Logs files list anf log file for specified client. Some specific (Stored clients was implemented in TestWcfService, see it):
+This example is demonstrated in Unit Test - SimpleLogsCaptureCallbackTests in which i manually start test WCF service with callback contract - ILogsCaptureCallback, starting client and getting Logs files list anf log file for specified client. Some specific (Stored clients was implemented in TestWcfService, see it):
 
 // Create server
             WSDualHttpBinding binding = new WSDualHttpBinding();
@@ -52,6 +52,17 @@ Full example is demonstrated in Unit Test - SimpleLogsCaptureCallbackTests in wh
             bool result = client.LogOut(sessionId);
             Assert.True(result);
             serviceHost.Close();
+
+**HOWEEVER THERE is a FULL EXAMPLE with creation of client and server with inheritable Callback Contract, it could be found here:
+https://github.com/EvilLord666/WcfDiagnostic/tree/master/Examples/WcfDiagnosticUsageExample**
+
+Common project - WcfDiagnosticUsageExample.Common is using for setup service and callback contracts,
+
+WcfDiagnosticUsageExample.Client - implementation of full callback contract (IAppCallback) which inherites methods of ILogsCaptureCallback, only thing you have to do is to handle own callback methods if you have it.
+
+WcfDiagnosticUsageExample.Server - server impl with possibility to catch events on connect/disconnect
+
+And 2 cli projects, Server.Cli should be strated before Client.Cli.
 
 # Nuget Package
 https://www.nuget.org/packages/WcfDiagnostic/
