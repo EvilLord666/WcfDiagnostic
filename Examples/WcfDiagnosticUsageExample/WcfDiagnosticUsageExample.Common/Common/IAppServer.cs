@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
-using Wcf.Diagnostics.Core.Interfaces;
+using Wcf.Diagnostics.Core.Data;
 
 namespace WcfDiagnosticUsageExample.Common.Common
 {
     [ServiceContract(CallbackContract = typeof(IAppCallback))]
-    public interface IAppServer<T> where T : IComparable
+    public interface IAppServer
     {
         [OperationContract]
         bool Login(string userName, string password);
@@ -14,9 +14,9 @@ namespace WcfDiagnosticUsageExample.Common.Common
         [OperationContract]
         bool Logout();
         
-        IList<string> GetLogFiles(T clientId);
-        string GetLogFile(T clientId);
-        string GetVersion(T clientId);
-        IList<string> GetEnvironmentVariables(T clientId);
+        IList<LogInfo> GetLogFiles(string clientId);
+        string GetLogFile(string clientId, string fileName);
+        string GetVersion(string clientId);
+        IList<string> GetEnvironmentVariables(string clientId);
     }
 }
