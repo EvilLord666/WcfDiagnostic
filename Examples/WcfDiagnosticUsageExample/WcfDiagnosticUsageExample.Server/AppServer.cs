@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel;
 using Wcf.Diagnostics.Core.Data;
 using WcfDiagnosticUsageExample.Common.Common;
+using WcfDiagnosticUsageExample.Server.Events;
 
 namespace WcfDiagnosticUsageExample.Server
 {
@@ -19,9 +20,13 @@ namespace WcfDiagnosticUsageExample.Server
         public bool Login(string userName, string password)
         {
             // todo: umv: this is example, we simply pass authentication
-            OperationContext context = OperationContext.Current;
+            OperationContext context = OperationContext.Current;           
             string key = context.SessionId ?? context.Channel.RemoteAddress.Uri.Host;
-            Clients[key] = context.GetCallbackChannel<IAppCallback>();
+            if (!Clients.ContainsKey(key))
+            {
+                Clients[key] = context.GetCallbackChannel<IAppCallback>();
+                ConnectedStateChangedHandler(new ClientConnectedEventArgs(true, key, Clients[key]));
+            }
             return true;
         }
 
@@ -31,6 +36,7 @@ namespace WcfDiagnosticUsageExample.Server
             string key = context.SessionId ?? context.Channel.RemoteAddress.Uri.Host;
             if (Clients.ContainsKey(key))
             {
+                ConnectedStateChangedHandler(new ClientConnectedEventArgs(false, key));
                 Clients.Remove(Clients.First(c => c.Key == key));
                 return true;
             }
@@ -71,6 +77,15 @@ namespace WcfDiagnosticUsageExample.Server
             IList<string> environment = client.GetEnvironmentDescription();
             return environment;
         }
+
+        private void ConnectedStateChangedHandler(ClientConnectedEventArgs args)
+        {
+            EventHandler<ClientConnectedEventArgs> handler = OnConnectedStateChanged;
+            if (handler != null)
+                handler(this, args);
+        }
+
+        public event EventHandler<ClientConnectedEventArgs> OnConnectedStateChanged;
 
         public static IDictionary<string, IAppCallback> Clients { get; }
 
