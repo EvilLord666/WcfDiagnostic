@@ -11,9 +11,6 @@ namespace WcfDiagnosticUsageExample.Common.Common
     {
         IList<LogInfo> GetLogFiles(string clientId);
         string GetLogFile(string clientId, string fileName);
-
-        //[OperationContract]
-        //void Empty();
     }
 
     [ServiceContract(CallbackContract = typeof(IAppCallback))]

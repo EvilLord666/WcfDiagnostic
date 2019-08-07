@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.ServiceModel;
+using System.Threading.Tasks;
+using Wcf.Diagnostics.Core.Data;
+using Wcf.Diagnostics.Core.Interfaces;
 using Wcf.Diagnostics.NetCore.Impl.InterfacesImpl;
 using WcfDiagnosticUsageExample.Common.Common;
 
@@ -10,7 +13,7 @@ namespace WcfDiagnosticUsageExample.Client
         public AppClient(string logsRootDirectory, bool includeSubDirs, IList<string> logFileFilters, string appServiceEndpoint) 
             : base(logsRootDirectory, includeSubDirs, logFileFilters)
         {
-            var binding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
+            WSDualHttpBinding binding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(appServiceEndpoint);
             InstanceContext context = new InstanceContext(this);
             DuplexChannelFactory<IAppServer> channelFactory = new DuplexChannelFactory<IAppServer>(context, binding, endpointAddress);
@@ -47,7 +50,6 @@ namespace WcfDiagnosticUsageExample.Client
         }
 
         private const string ClientVersion = "1.0_beta";
-        //private const string AppServiceEndpointUri = "http://127.0.0.1:8000/appService/";
         
         private readonly IAppServer _server;
     }

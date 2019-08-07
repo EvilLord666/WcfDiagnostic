@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using WcfDiagnosticUsageExample.Client;
 
 namespace WcfDiagnosticUsageExample.ClientCli
@@ -8,7 +9,7 @@ namespace WcfDiagnosticUsageExample.ClientCli
     {
         static void Main(string[] args)
         {
-            AppClient client = new AppClient(@"..\..\..\logs", true, new List<string>() {"*.log"}, 
+            AppClient client = new AppClient(Path.GetFullPath(@".\logs"), true, new List<string>() {"*.log"}, 
                                               "http://127.0.0.1:8000/appService/" );
             
             bool result = client.Start();

@@ -32,7 +32,6 @@ namespace WcfDiagnosticUsageExample.ServerCli
             };
             serviceHost.Open(TimeSpan.FromSeconds(10));
             
-            // AppServer server = new AppServer();
             AppServer.OnConnectedStateChanged += (sender, eventArgs) =>
             {
                 if (eventArgs.Connected)
