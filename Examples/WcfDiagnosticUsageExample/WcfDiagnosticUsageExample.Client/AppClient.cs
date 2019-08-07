@@ -10,8 +10,7 @@ namespace WcfDiagnosticUsageExample.Client
         public AppClient(string logsRootDirectory, bool includeSubDirs, IList<string> logFileFilters, string appServiceEndpoint) 
             : base(logsRootDirectory, includeSubDirs, logFileFilters)
         {
-            //NetHttpBinding binding = new Du(BasicHttpSecurityMode.None);
-            var binding = new WSDualHttpBinding();
+            var binding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
             EndpointAddress endpointAddress = new EndpointAddress(appServiceEndpoint);
             InstanceContext context = new InstanceContext(this);
             DuplexChannelFactory<IAppServer> channelFactory = new DuplexChannelFactory<IAppServer>(context, binding, endpointAddress);

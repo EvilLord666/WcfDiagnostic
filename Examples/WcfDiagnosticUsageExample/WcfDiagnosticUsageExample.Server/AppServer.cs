@@ -9,7 +9,7 @@ using WcfDiagnosticUsageExample.Server.Events;
 
 namespace WcfDiagnosticUsageExample.Server
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class AppServer : IAppServer
     {
         static AppServer()
@@ -85,7 +85,7 @@ namespace WcfDiagnosticUsageExample.Server
                 handler(this, args);
         }
 
-        public event EventHandler<ClientConnectedEventArgs> OnConnectedStateChanged;
+        public static event EventHandler<ClientConnectedEventArgs> OnConnectedStateChanged;
 
         public static IDictionary<string, IAppCallback> Clients { get; }
 

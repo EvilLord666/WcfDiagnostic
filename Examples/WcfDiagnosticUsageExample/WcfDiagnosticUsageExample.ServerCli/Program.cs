@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using Wcf.Diagnostics.Core.Data;
 using WcfDiagnosticUsageExample.Common.Common;
 using WcfDiagnosticUsageExample.Server;
 
@@ -31,16 +32,23 @@ namespace WcfDiagnosticUsageExample.ServerCli
             };
             serviceHost.Open(TimeSpan.FromSeconds(10));
             
-            Console.WriteLine("Press any input plus Enter to stop the server!");
-
-            AppServer server = new AppServer();
-
-            server.OnConnectedStateChanged += (sender, eventArgs) =>
+            // AppServer server = new AppServer();
+            AppServer.OnConnectedStateChanged += (sender, eventArgs) =>
             {
                 if (eventArgs.Connected)
                 {
                     Console.WriteLine($"Client: {eventArgs.ClientId} connected.");
-                    // todo: umv: access client via callback interface
+                    string version = eventArgs.ClientCallback.GetVersion();
+                    Console.WriteLine($"Client Version is: {version}");
+                    IList<LogInfo> logFiles = eventArgs.ClientCallback.GetLogsFiles();
+                    if (logFiles != null)
+                    {
+                        Console.WriteLine("Client logs files are: ");
+                        foreach (LogInfo logFile in logFiles)
+                        {
+                            Console.WriteLine($"\t\t:{logFile.FileName}");
+                        }
+                    }
                 }
                 else
                 {
@@ -48,6 +56,7 @@ namespace WcfDiagnosticUsageExample.ServerCli
                 }
             };
             
+            Console.WriteLine("Press any input plus Enter to stop the server!");
             string input = Console.ReadLine();
             
             serviceHost.Close();
